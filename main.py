@@ -12,7 +12,9 @@ def ask_if_known_word(word):
 
     print(user_response)
           
-    exit()
+    exit() # Pause
+
+    
 
     user_response = str(user_response)[16:] # Only look at the stuff after the "Button received" generic output text
 
