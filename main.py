@@ -4,15 +4,17 @@ import subprocess # For GUI w/ input capture
 import os # For GUI w/o input capture
 import playsound # For sound effects
 import time # For waiting for sound effect to play
+import config # Settings
 
 # Helper functions
 def audio(name):
-    if name == 'correct':
-        playsound.playsound('audio/correct.mp3', False) # False lets this run async
-        time.sleep(0.6)
-    elif name == 'wrong':
-        playsound.playsound('audio/wrong.mp3', False)
-        time.sleep(0.6)
+    if config.play_sound_effects is True: # Only run when config file permits
+        if name == 'correct':
+            playsound.playsound('audio/correct.mp3', False) # False lets this run async
+            time.sleep(0.6)
+        elif name == 'wrong':
+            playsound.playsound('audio/wrong.mp3', False)
+            time.sleep(0.6)
 
 def word_known(word):
     audio('correct')
