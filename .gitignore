@@ -2,3 +2,4 @@ unknown.txt
 known.txt
 __pycache__
 config.py
+.DS_Store
