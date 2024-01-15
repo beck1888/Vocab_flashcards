@@ -3,30 +3,23 @@ import random # For picking a random line
 import subprocess # For GUI w/ input capture
 import os # For GUI w/o input capture
 import playsound # For sound effects
-import sys # For neat/clean exits
-import config # Get user settings
-
 
 # Helper functions
 def audio(name):
     if name == 'correct':
-        playsound.playsound('correct.mp3')
-    elif name == 'wrong':
-        playsound.playsound('wrong.mp3')
-    elif name == 'game_over':
-        playsound.playsound('game_over.mp3')
-    elif name == 'startup':
-        playsound.playsound('startup.mp3')
+        playsound.playsound('audio/correct.mp3', True)
     else:
-        sys.exit(f"Error: '{name}' is not a known sound source for this project")
+        playsound.playsound('audio/wrong.mp3', True)
 
 
 def word_known(word):
+    audio('correct')
     with open('known.txt', 'a') as file_2:
         file_2.write(f"{word}\n")
         file_2.close()
 
 def word_unknown(word):
+    audio('wrong')
     with open('unknown.txt', 'a') as file_2:
         file_2.write(f"{word}\n")
         file_2.close()
