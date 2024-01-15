@@ -11,10 +11,15 @@ def audio(name):
     if config.play_sound_effects is True: # Only run when config file permits
         if name == 'correct':
             playsound.playsound('audio/correct.mp3', False) # False lets this run async
-            time.sleep(0.6)
+            time.sleep(0.6) # Pauses to let the sound play
         elif name == 'wrong':
             playsound.playsound('audio/wrong.mp3', False)
-            time.sleep(0.6)
+            time.sleep(0.6) # Pauses to let the sound play
+        elif name == 'start': # Intro music
+            playsound.playsound('audio/start.mp3', False)
+        elif name == 'outro':
+            playsound.playsound('audio/outro.mp3', False)
+
 
 def word_known(word):
     audio('correct')
@@ -77,6 +82,8 @@ def reset_mode():
             with open('known.txt', 'w') as erasing_file_2:
                 erasing_file_2.write('')
                 erasing_file_2.close()
+            
+            main_menu()
     else:
         main_menu()
             
@@ -104,14 +111,16 @@ def flashcard_mode():
     score = round(((known / times_to_run) * 100), 1)
 
     # When loop is done, say goodbye and show score
+    time.sleep(1) # Transition period
     bye_command = f'''
     osascript -e 'display dialog "👍🏻 Great job today! See you later!\n\n🥇 Score: {score}%" buttons {{"Goodbye!"}} default button "Goodbye!"'
     '''
+    audio('outro')
     os.system(bye_command) # Run the command
 
 def main_menu():    
     command = f'''
-    osascript -e 'display dialog "Main Menu: Welcome! What would you like to do?" buttons {{"🔁 Erase and reset", "📖 Start flashcards"}} default button "📖 Start flashcards"'
+    osascript -e 'display dialog "Main Menu: Welcome! What would you like to do?" buttons {{"Exit", "🔁 Erase and reset", "📖 Start flashcards"}} default button "📖 Start flashcards"'
     '''
     user_response_bytes = subprocess.check_output(command, shell=True) # Run the command and capture output
     user_response = user_response_bytes.decode('utf-8') # Format output to regular string
@@ -120,11 +129,14 @@ def main_menu():
     user_response = user_response[16:] # Get rid of the 'button pressed' part
     user_response = user_response[0:-1] # Get rid of the new line
 
-    if user_response == '🔁 Erase and reset':
+    if user_response == 'exit':
+        exit()
+    elif user_response == '🔁 Erase and reset':
         reset_mode()
     else:
         flashcard_mode()
 
 ## Start of execution flow
 if __name__ == '__main__':
+    # audio('start')
     main_menu()
