@@ -20,7 +20,7 @@ def word_unknown(word):
 ## GUI Defs
 def ask_if_known_word(word):
     command = f'''
-    osascript -e 'display dialog "Do you know this word: {word}" buttons {{"Exit", "No", "Yes"}} default button "Yes"'
+    osascript -e 'display dialog "Do you know this word: {word}" buttons {{"Exit", "🚫 No", "✅ Yes"}}'
     '''
     user_response_bytes = subprocess.check_output(command, shell=True) # Run the command and capture output
     user_response = user_response_bytes.decode('utf-8') # Format output to regular string
@@ -29,9 +29,9 @@ def ask_if_known_word(word):
     user_response = user_response[16:] # Get rid of the 'button pressed' part
     user_response = user_response[0:-1] # Get rid of the new line
 
-    if user_response == 'Yes':
+    if user_response == '✅ Yes':
         word_known(word)
-    elif user_response == 'No':
+    elif user_response == '🚫 No':
         word_unknown(word)
     elif user_response == 'Exit':
         bye_command = f'''
