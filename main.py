@@ -1,6 +1,7 @@
 ## Imports
 import random # For picking a random line
-import subprocess # For GUI
+import subprocess # For GUI w/ input capture
+import os # For GUI w/o input capture
 import sys # For neat exits
 
 ## GUI Defs
@@ -21,7 +22,13 @@ def ask_if_known_word(word):
         print("This is NOT a know word")
     elif user_response == 'Exit':
         # Calculate stats
-        print("Good-bye!")
+        # game_stats = stats()
+        # game_stats = None
+        bye_command = f'''
+        osascript -e 'display dialog "Great job today! See you later!" buttons {{"Goodbye!"}} default button "Goodbye!"'
+        '''
+        os.system(bye_command) # Run the command
+        # print("Good-bye!")
         exit()
     else:
         sys.exit(f"Error: invalid button received. Expected ['Yes', 'No', 'Exit'] but got {user_response}")
