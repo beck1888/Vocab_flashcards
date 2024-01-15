@@ -4,6 +4,19 @@ import subprocess # For GUI w/ input capture
 import os # For GUI w/o input capture
 import sys # For neat exits
 
+
+# Helper functions
+def word_known(word):
+    with open('known.txt', 'a') as file_2:
+        file_2.write(f"{word}\n")
+        file_2.close()
+
+def word_unknown(word):
+    with open('unknown.txt', 'a') as file_2:
+        file_2.write(f"{word}\n")
+        file_2.close()
+
+
 ## GUI Defs
 def ask_if_known_word(word):
     command = f'''
@@ -17,13 +30,10 @@ def ask_if_known_word(word):
     user_response = user_response[0:-1] # Get rid of the new line
 
     if user_response == 'Yes':
-        print("This IS a known word")
+        word_known(word)
     elif user_response == 'No':
-        print("This is NOT a know word")
+        word_unknown(word)
     elif user_response == 'Exit':
-        # Calculate stats
-        # game_stats = stats()
-        # game_stats = None
         bye_command = f'''
         osascript -e 'display dialog "Great job today! See you later!" buttons {{"Goodbye!"}} default button "Goodbye!"'
         '''
@@ -43,6 +53,8 @@ def mainloop():
                 word = line.strip() # Get the line cleanly
                 word = word.upper() # Makes the word uppercase for better readability
                 ask_if_known_word(word) # Ask if word is known
+
+    mainloop() # Recursion call for repeating the word ask process
 
     # print(f"At line {line_number} I saw {word}")
 
