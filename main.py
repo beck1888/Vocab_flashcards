@@ -20,7 +20,7 @@ def word_unknown(word):
 ## GUI Defs
 def ask_if_known_word(word):
     command = f'''
-    osascript -e 'display dialog "Do you know this word: {word}" buttons {{"Exit", "🚫 No", "✅ Yes"}}'
+    osascript -e 'display dialog "Do you know this word: {word}" buttons {{"🚫 No", "✅ Yes"}}'
     '''
     user_response_bytes = subprocess.check_output(command, shell=True) # Run the command and capture output
     user_response = user_response_bytes.decode('utf-8') # Format output to regular string
@@ -31,17 +31,9 @@ def ask_if_known_word(word):
 
     if user_response == '✅ Yes':
         word_known(word)
-    elif user_response == '🚫 No':
-        word_unknown(word)
-    elif user_response == 'Exit':
-        bye_command = f'''
-        osascript -e 'display dialog "Great job today! See you later!" buttons {{"Goodbye!"}} default button "Goodbye!"'
-        '''
-        os.system(bye_command) # Run the command
-        # print("Good-bye!")
-        exit()
+        return True
     else:
-        sys.exit(f"Error: invalid button received. Expected ['Yes', 'No', 'Exit'] but got {user_response}")
+        word_unknown(word)
 
 
 ## Main function that gets repeated
@@ -54,9 +46,40 @@ def mainloop():
                 word = word.upper() # Makes the word uppercase for better readability
                 ask_if_known_word(word) # Ask if word is known
 
-    mainloop() # Recursion call for repeating the word ask process
+    # mainloop() # Recursion call for repeating the word ask process
 
     # print(f"At line {line_number} I saw {word}")
 
 ## Code call
-mainloop()
+
+# Ask how many vocab words to review
+command_cycles = '''
+osascript -e 'display dialog "How many words would you like to review?" default answer "10" buttons {"Start!"} default button "Start!"'
+'''
+
+user_response_bytes = subprocess.check_output(command_cycles, shell=True) # Run the command and capture output
+user_response = user_response_bytes.decode('utf-8') # Format output to regular string
+times_to_run = int(user_response[38:-1]) # Crop output to number part only
+
+
+# Initialize score
+known = 0
+
+# Run the mainloop the number times the user asked for
+for _ in range(times_to_run):
+    result = mainloop()
+    # Ad
+    if result is True:
+        known += 1
+
+# Build score
+score = round(known / times_to_run)
+
+
+# When loop is done, say goodbye
+bye_command = f'''
+osascript -e 'display dialog "Great job today! See you later!\n\nScore: {score}%" buttons {{"Goodbye!"}} default button "Goodbye!"'
+'''
+os.system(bye_command) # Run the command
+# print("Good-bye!")
+exit()
