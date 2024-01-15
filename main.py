@@ -129,7 +129,7 @@ def main_menu():
     user_response = user_response[16:] # Get rid of the 'button pressed' part
     user_response = user_response[0:-1] # Get rid of the new line
 
-    if user_response == 'exit':
+    if user_response == 'Exit':
         exit()
     elif user_response == '🔁 Erase and reset':
         reset_mode()
